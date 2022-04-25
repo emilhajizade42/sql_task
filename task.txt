@@ -1,0 +1,93 @@
+CREATE DATABASE Hotel
+
+USE Hotel
+
+CREATE TABLE Rooms(
+id int primary key,
+
+
+);
+
+CREATE TABLE RoomType(
+id int primary key,
+roomName nvarchar(255),
+room_id int,
+foreign key (room_id) references Rooms(id)
+);
+
+CREATE TABLE Customers(
+id int primary key,
+fullname nvarchar(255),
+room_id int,
+foreign key (room_id) references Rooms(id)
+);
+
+CREATE TABLE Reservations(
+id int primary key,
+isRezerv bit,
+room_id int,
+foreign key (room_id) references Rooms(id)
+);
+
+
+CREATE TABLE Payments(
+id int primary key,
+payment float ,
+pytime datetime,
+customer_id int,
+foreign key (customer_id) references Customers(id)
+
+);
+
+CREATE TABLE Spendings(
+id int primary key,
+spending_name nvarchar(255),
+spend float ,
+sptime datetime,
+customer_id  int,
+foreign key (customer_id) references Customers(id)
+);
+
+
+
+CREATE VIEW CustomerPAYandSPEND AS
+SELECT * FROM Customers
+JOIN 
+Spendings
+on Spendings.customer_id = Customers.id
+JOIN 
+Payments
+on Payments.customer_id = Customers.id
+
+Select * From CustomerPAYandSPEND
+
+CREATE PROCEDURE SelectAllCustomers
+AS
+SELECT * FROM Customers
+GO;
+
+exec SelectAllCustomers
+
+
+CREATE FUNCTION Customers12 (
+	@long int
+)
+RETURNS TABLE AS
+RETURN
+	SELECT *
+	FROM Customers
+	WHERE Len(Customers.fullname) > @long;
+
+
+	SELECT * FROM dbo.Customers12(2);
+
+
+	 
+CREATE TRIGGER triggerAD
+ON Customers   
+ FOR  DELETE   
+ 
+AS 
+SELECT * FROM Rooms
+GO
+
